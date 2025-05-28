@@ -1,6 +1,6 @@
 import streamlit as st
 
-# ----- PAGE CONFIGURATION -----
+# Page config
 st.set_page_config(
     page_title="DiDi Shop Processes",
     layout="wide",
@@ -8,16 +8,17 @@ st.set_page_config(
     page_icon="🍊"
 )
 
-# ----- CUSTOM CSS -----
-st.markdown("""
+# ----- THEME SELECTOR -----
+theme = st.radio("Select theme:", ["🍊 Light (DiDi)", "🌙 Dark"], horizontal=True)
+
+# ----- DYNAMIC CSS -----
+if theme == "🍊 Light (DiDi)":
+    css = """
     <style>
-        body {
-            background-color: #FFEEDB;
-            color: #333333;
+        html, body, .main {
+            background-color: #FFEEDB !important;
+            color: #333333 !important;
             font-family: 'Segoe UI', sans-serif;
-        }
-        .main {
-            background-color: #FFEEDB;
         }
         h1, h2, h3 {
             color: #FF6600 !important;
@@ -30,10 +31,6 @@ st.markdown("""
             border-radius: 8px;
             box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
         }
-        .link-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
         a {
             color: #0072CE !important;
             text-decoration: none !important;
@@ -41,8 +38,6 @@ st.markdown("""
         a:hover {
             text-decoration: underline !important;
         }
-
-        /* STYLED SELECTBOX */
         div[data-baseweb="select"] {
             border: 1px solid #FFB366 !important;
             border-radius: 8px !important;
@@ -50,27 +45,54 @@ st.markdown("""
             width: 300px !important;
             margin-left: 30px;
             margin-top: 5px;
-            transition: border 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-        div[data-baseweb="select"]:hover {
-            border-color: #FF851B !important;
-        }
-        div[data-baseweb="select"]:focus-within {
-            box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.3);
-        }
-        div[data-baseweb="select"] * {
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 16px;
         }
     </style>
-""", unsafe_allow_html=True)
+    """
+else:
+    css = """
+    <style>
+        html, body, .main {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        h1, h2, h3 {
+            color: #FF9800 !important;
+        }
+        .link-block {
+            background-color: #2c2c2c;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 6px solid #FF9800;
+            border-radius: 8px;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+        a {
+            color: #80dfff !important;
+            text-decoration: none !important;
+        }
+        a:hover {
+            text-decoration: underline !important;
+        }
+        div[data-baseweb="select"] {
+            border: 1px solid #FF9800 !important;
+            border-radius: 8px !important;
+            background-color: #333 !important;
+            width: 300px !important;
+            margin-left: 30px;
+            margin-top: 5px;
+        }
+    </style>
+    """
+
+st.markdown(css, unsafe_allow_html=True)
 
 # ----- HEADER -----
 st.markdown("## 🍊 **DiDi Shop – Process Hub**")
 st.markdown("Select a department and click on the corresponding resource.")
 st.markdown("---")
 
-# ----- DEPARTMENTS DICTIONARY -----
+# ----- DEPARTMENTS -----
 departments = {
     "Communications": {
         "📄 Link to presentation": "https://docs.google.com/spreadsheets/d/1MarketingSheet",
@@ -92,11 +114,11 @@ departments = {
     }
 }
 
-# ----- SELECTBOX WITH LABEL ABOVE -----
+# ----- SELECT DEPARTMENT -----
 st.markdown("**Select a department**")
 department = st.selectbox("", list(departments.keys()))
 
-# ----- DISPLAY LINKS -----
+# ----- SHOW LINKS -----
 st.subheader(f"📎 Available links for **{department}**:")
 for name, url in departments[department].items():
     st.markdown(
